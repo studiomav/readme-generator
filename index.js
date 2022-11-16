@@ -1,6 +1,19 @@
-// TODO: Include packages needed for this application
 var inquirer = require('inquirer');
 var fs = require('fs');
+
+var readmeBuffer = '';
+var readmeEntries = 
+{
+    'title' : '', 
+    'desc' : '', 
+    'install' : '', 
+    'usage' : '', 
+    'contrib' : '', 
+    'tests' : '', 
+    'license' : '', 
+    'authorName' : '', 
+    'authorEmail' : ''
+};
 
 // TODO: Create an array of questions for user input
 const questions = [
@@ -53,15 +66,48 @@ const questions = [
 ];
 
 // TODO: Create a function to write README file
-function writeToFile(fileName, data) {}
+function writeToFile(fileName, data)
+{
+    fs.appendFile(fileName, data, function (err)
+    {
+        if (err) throw err;
+        console.log('Saved!');
+    });
+}
 
-// TODO: Create a function to initialize app
+function createReadme()
+{
+    readmeBuffer += `# ${readmeEntries.title}\n`;
+    readmeBuffer += `### ${readmeEntries.desc}\n`;
+    readmeBuffer += `${readmeEntries.install}\n`;
+    readmeBuffer += `${readmeEntries.usage}\n`;
+    readmeBuffer += `${readmeEntries.contrib}\n`;
+    readmeBuffer += `${readmeEntries.tests}\n`;
+    readmeBuffer += `${readmeEntries.license}\n`;
+    readmeBuffer += `${readmeEntries.authorName}\n`;
+    readmeBuffer += `${readmeEntries.authorEmail}\n`;
+
+    console.log('Readme file created, saving to disk.');
+    writeToFile('output.md', readmeBuffer);
+}
+
 function init()
 {
     inquirer.prompt(questions)
     .then((answers) =>
     {
-        console.log(answers);
+        readmeEntries.title = answers.title;
+        readmeEntries.desc = answers.description;
+        readmeEntries.install = answers.install;
+        readmeEntries.usage = answers.usage;
+        readmeEntries.contrib = answers.contrib;
+        readmeEntries.tests = answers.tests;
+        readmeEntries.license = answers.license;
+        readmeEntries.authorName = answers.username;
+        readmeEntries.authorEmail = answers.email;
+
+        console.log('Responses logged, creating readme file.');
+        createReadme();        
     })
     .catch((error) =>
     {
@@ -75,8 +121,7 @@ function init()
     });
 }
 
-// Function call to initialize app
-console.log("Welcome to the readme generation script. This tool will generate a pre-formatted readme.md based on your parameters.");
+console.log('Welcome to the readme generation script. This tool will generate a pre-formatted readme.md based on your parameters.');
 inquirer.prompt(
     [
         {
@@ -87,5 +132,5 @@ inquirer.prompt(
     ]).then((response) =>
     {
         if (response.begin) return init();
-        else return console.log("Goodbye.");
+        else return console.log('Goodbye.');
     });
