@@ -25,43 +25,43 @@ const questions = [
     {
         type: 'input',
         name: 'description',
-        message: 'Enter a brief description of your project',
+        message: 'Enter a brief description of your project:',
     },
     {
         type: 'input',
         name: 'install',
-        message: 'Enter any installation information required to get your project working, or leave blank',
+        message: 'Enter any installation information required to get your project working, or leave blank:',
     },
     {
         type: 'input',
         name: 'usage',
-        message: 'Enter any usage information your users should be aware of, or leave blank',
+        message: 'Enter any usage information your users should be aware of, or leave blank:',
     },
     {
         type: 'input',
         name: 'contrib',
-        message: 'Enter any contributions you would like to attribute to, or leave blank',
+        message: 'Enter any contributions you would like to attribute to, or leave blank:',
     },
     {
         type: 'input',
         name: 'tests',
-        message: 'Enter any testing information you would like to include, or leave blank',
+        message: 'Enter any testing information you would like to include, or leave blank:',
     },
     {
         type: 'list',
         name: 'license',
-        message: 'Choose a license to use for your project',
+        message: 'Choose a license to use for your project:',
         choices: ['License 1', 'License 2', 'License 3'],
     },
     {
         type: 'input',
         name: 'username',
-        message: 'Input your github username',
+        message: 'Input your github username:',
     },
     {
         type: 'input',
         name: 'email',
-        message: 'Input your email address',
+        message: 'Input your email address:',
     }
 ];
 
@@ -79,13 +79,21 @@ function createReadme()
 {
     readmeBuffer += `# ${readmeEntries.title}\n`;
     readmeBuffer += `### ${readmeEntries.desc}\n`;
-    readmeBuffer += `${readmeEntries.install}\n`;
-    readmeBuffer += `${readmeEntries.usage}\n`;
-    readmeBuffer += `${readmeEntries.contrib}\n`;
-    readmeBuffer += `${readmeEntries.tests}\n`;
-    readmeBuffer += `${readmeEntries.license}\n`;
-    readmeBuffer += `${readmeEntries.authorName}\n`;
-    readmeBuffer += `${readmeEntries.authorEmail}\n`;
+
+    readmeBuffer += `## Table of Contents\n`;
+    if (readmeEntries.install != "") readmeBuffer += `- [Installation](#installation)\n`;
+    if (readmeEntries.usage != "") readmeBuffer += `- [Usage](#usage)\n`;
+    if (readmeEntries.contrib != "") readmeBuffer += `- [Contributions](#contributions)\n`;
+    if (readmeEntries.tests != "") readmeBuffer += `- [Testing](#testing)\n`;
+    readmeBuffer += `- [License](#license)\n`;
+    readmeBuffer += `- [Questions](#questions)\n`;
+
+    if (readmeEntries.install != "") readmeBuffer += `## Installation:\n${readmeEntries.install}\n`;
+    if (readmeEntries.usage != "") readmeBuffer += `## Usage\n${readmeEntries.usage}\n`;
+    if (readmeEntries.contrib != "") readmeBuffer += `## Contributions\n${readmeEntries.contrib}\n`;
+    if (readmeEntries.tests != "") readmeBuffer += `## Testing\n${readmeEntries.tests}\n`;
+    readmeBuffer += `## License\n${readmeEntries.license}\n`;
+    readmeBuffer += `## Questions\nFor questions, you may contact ${readmeEntries.authorName} via email: <a href="mailto:${readmeEntries.authorEmail}">${readmeEntries.authorEmail}</a>`;
 
     console.log('Readme file created, saving to disk.');
     writeToFile('output.md', readmeBuffer);
