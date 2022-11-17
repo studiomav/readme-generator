@@ -12,20 +12,36 @@ var readmeEntries =
     'tests' : '', 
     'license' : '', 
     'authorName' : '', 
-    'authorEmail' : ''
+    'authorEmail' : '',
+    'fileName' : ''
 };
+const licenses =
+{
+    'Apache 2.0': ['https://opensource.org/licenses/Apache-2.0', '[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)'],
+    'Creative Commons Attribution-NonCommercial' : ['https://creativecommons.org/licenses/by-nc/4.0/', '[![License: CC BY-NC 4.0](https://licensebuttons.net/l/by-nc/4.0/80x15.png)](https://creativecommons.org/licenses/by-nc/4.0/)'],
+    'GNU GPL v3' : ['https://www.gnu.org/licenses/gpl-3.0', '[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)'],
+    'MIT' : ['https://opensource.org/licenses/MIT', '[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)'],
+    'Mozilla Public License 2.0' : ['https://opensource.org/licenses/MPL-2.0', '[![License: MPL 2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)'],
+}
 
-// TODO: Create an array of questions for user input
+const isAnswerBlank = async (input) =>
+{
+    if (input == '') return 'This field is required';
+    else return true;
+}
+
 const questions = [
     {
         type: 'input',
         name: 'title',
         message: 'What is the title of your project?',
+        validate: isAnswerBlank,
     },
     {
         type: 'input',
         name: 'description',
         message: 'Enter a brief description of your project:',
+        validate: isAnswerBlank,
     },
     {
         type: 'input',
@@ -51,24 +67,31 @@ const questions = [
         type: 'list',
         name: 'license',
         message: 'Choose a license to use for your project:',
-        choices: ['License 1', 'License 2', 'License 3'],
+        choices: Object.keys(licenses),
     },
     {
         type: 'input',
         name: 'username',
         message: 'Input your github username:',
+        validate: isAnswerBlank,
     },
     {
         type: 'input',
         name: 'email',
         message: 'Input your email address:',
+        validate: isAnswerBlank,
+    },
+    {
+        type: 'input',
+        name: 'fileName',
+        message: 'Enter the desired filename for your .md file:',
+        default: 'readme.md',
     }
 ];
 
-// TODO: Create a function to write README file
 function writeToFile(fileName, data)
 {
-    fs.appendFile(fileName, data, function (err)
+    fs.appendFile(('./output/'+fileName), data, function (err)
     {
         if (err) throw err;
         console.log('Saved!');
@@ -77,7 +100,7 @@ function writeToFile(fileName, data)
 
 function createReadme()
 {
-    readmeBuffer += `# ${readmeEntries.title}\n`;
+    readmeBuffer += `# ${readmeEntries.title} ${licenses[readmeEntries.license][1]}\n`;
     readmeBuffer += `### ${readmeEntries.desc}\n`;
 
     readmeBuffer += `## Table of Contents\n`;
@@ -92,11 +115,11 @@ function createReadme()
     if (readmeEntries.usage != "") readmeBuffer += `## Usage\n${readmeEntries.usage}\n`;
     if (readmeEntries.contrib != "") readmeBuffer += `## Contributions\n${readmeEntries.contrib}\n`;
     if (readmeEntries.tests != "") readmeBuffer += `## Testing\n${readmeEntries.tests}\n`;
-    readmeBuffer += `## License\n${readmeEntries.license}\n`;
+    readmeBuffer += `## License\nThis project utilizes the <a href="${licenses[readmeEntries.license][0]}">${readmeEntries.license}</a> license.\n`;
     readmeBuffer += `## Questions\nFor questions, you may contact ${readmeEntries.authorName} via email: <a href="mailto:${readmeEntries.authorEmail}">${readmeEntries.authorEmail}</a>`;
 
     console.log('Readme file created, saving to disk.');
-    writeToFile('output.md', readmeBuffer);
+    writeToFile(readmeEntries.fileName, readmeBuffer);
 }
 
 function init()
@@ -113,6 +136,7 @@ function init()
         readmeEntries.license = answers.license;
         readmeEntries.authorName = answers.username;
         readmeEntries.authorEmail = answers.email;
+        readmeEntries.fileName = answers.fileName;
 
         console.log('Responses logged, creating readme file.');
         createReadme();        
