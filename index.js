@@ -1,7 +1,11 @@
+//importing required packages
 var inquirer = require('inquirer');
 var fs = require('fs');
 
+//initializing the buffer that will be mutated and then written to file
 var readmeBuffer = '';
+
+//initializing the object that holds the user's CLI entries
 var readmeEntries = 
 {
     'title' : '', 
@@ -15,6 +19,8 @@ var readmeEntries =
     'authorEmail' : '',
     'fileName' : ''
 };
+
+//a few common licenses to use, along with their url and badge icon markdown
 const licenses =
 {
     'Apache 2.0': ['https://opensource.org/licenses/Apache-2.0', '[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)'],
@@ -24,12 +30,14 @@ const licenses =
     'Mozilla Public License 2.0' : ['https://opensource.org/licenses/MPL-2.0', '[![License: MPL 2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)'],
 }
 
+//validator for if an entry was left blank
 const isAnswerBlank = async (input) =>
 {
     if (input == '') return 'This field is required';
     else return true;
 }
 
+//these are the main questions that are used to generate the readme
 const questions = [
     {
         type: 'input',
@@ -89,6 +97,7 @@ const questions = [
     }
 ];
 
+//for writing the readme to disk
 function writeToFile(fileName, data)
 {
     fs.appendFile(('./output/'+fileName), data, function (err)
@@ -98,6 +107,7 @@ function writeToFile(fileName, data)
     });
 }
 
+//takes all the user entries and formats the readme
 function createReadme()
 {
     readmeBuffer += `# ${readmeEntries.title} ${licenses[readmeEntries.license][1]}\n`;
@@ -122,6 +132,7 @@ function createReadme()
     writeToFile(readmeEntries.fileName, readmeBuffer);
 }
 
+//the initial function that prompts the user with the readme questions
 function init()
 {
     inquirer.prompt(questions)
@@ -145,14 +156,15 @@ function init()
     {
         if (error.isTtyError)
         {
-        // Prompt couldn't be rendered in the current environment
+            console.log('prompt cannot- be rendered in the current environment.');
         } else
         {
-        // Something else went wrong
+            console.log('something went wrong.')
         }
     });
 }
 
+//an introduction to the script that confirms user intent before capturing CLI focus
 console.log('Welcome to the readme generation script. This tool will generate a pre-formatted readme.md based on your parameters.');
 inquirer.prompt(
     [
