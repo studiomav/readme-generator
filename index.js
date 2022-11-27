@@ -156,7 +156,7 @@ function init()
     {
         if (error.isTtyError)
         {
-            console.log('prompt cannot- be rendered in the current environment.');
+            console.log('prompt cannot be rendered in the current environment.');
         } else
         {
             console.log('something went wrong.')
